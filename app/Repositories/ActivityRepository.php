@@ -41,4 +41,22 @@ class ActivityRepository
             ARRAY_A
         );
     }
+
+    public function exists(string $entityType, int $entityId, string $activityType): bool
+{
+    global $wpdb;
+
+    $result = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM {$this->table}
+         WHERE entity_type = %s
+         AND entity_id = %d
+         AND activity_type = %s
+         LIMIT 1",
+        $entityType,
+        $entityId,
+        $activityType
+    ));
+
+    return !empty($result);
+}
 }
