@@ -10,6 +10,7 @@
 require_once __DIR__ . '/app/Bootstrap.php';
 require_once __DIR__ . '/app/PostTypes/LeadPostType.php';
 require_once __DIR__ . '/app/Admin/LeadMetaBox.php';
+require_once __DIR__ . '/app/Admin/LeadAdminColumns.php';
 
 use AgencyCRM\Bootstrap;
 
