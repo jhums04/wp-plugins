@@ -2,6 +2,8 @@
 
 namespace AgencyCRM\Admin;
 
+use AgencyCRM\Bootstrap;
+
 class LeadMetaBox
 {
     public function register(): void
@@ -236,40 +238,70 @@ class LeadMetaBox
     }
 
     public function saveMetaBox(int $postId): void
-    {
-        if (
-            !isset($_POST['agency_crm_lead_nonce'])
-        ) {
-            return;
-        }
-
-        if (
-            !wp_verify_nonce(
-                $_POST['agency_crm_lead_nonce'],
-                'agency_crm_lead_nonce'
-            )
-        ) {
-            return;
-        }
-
-        $fields = [
-            'contact_name',
-            'email',
-            'phone',
-            'source',
-            'stage',
-            'budget',
-            'assigned_user',
-        ];
-
-        foreach ($fields as $field) {
-            update_post_meta(
-                $postId,
-                $field,
-                sanitize_text_field(
-                    $_POST[$field] ?? ''
-                )
-            );
-        }
+{
+    error_log('saveMetaBox FIRED: ' . $postId);
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
     }
+
+    if (wp_is_post_revision($postId)) {
+        return;
+    }
+
+    if (
+        !isset($_POST['agency_crm_lead_nonce']) ||
+        !wp_verify_nonce($_POST['agency_crm_lead_nonce'], 'agency_crm_lead_nonce')
+    ) {
+        return;
+    }
+
+    $fields = [
+        'contact_name',
+        'email',
+        'phone',
+        'source',
+        'stage',
+        'budget',
+        'assigned_user',
+    ];
+
+    $changed = false;
+
+    $oldStage = get_post_meta($postId, 'stage', true);
+    $newStage = $_POST['stage'] ?? null;
+
+    foreach ($fields as $field) {
+
+        if (!isset($_POST[$field])) {
+            continue;
+        }
+
+        $old = get_post_meta($postId, $field, true);
+        $new = sanitize_text_field($_POST[$field]);
+
+        if ($old !== $new) {
+            $changed = true;
+        }
+
+        update_post_meta($postId, $field, $new);
+    }
+
+    if ($newStage !== null && $oldStage !== $newStage) {
+        Bootstrap::$activity->log(
+            'lead',
+            $postId,
+            'stage_changed',
+            "Stage changed from {$oldStage} to {$newStage}"
+        );
+    }
+
+    if ($changed) {
+        Bootstrap::$activity->log(
+            'lead',
+            $postId,
+            'lead_updated',
+            'Lead details updated'
+        );
+    }
+}
 }
