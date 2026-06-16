@@ -10,19 +10,19 @@ class ActivityService
         private ActivityRepository $repo
     ) {}
 
-    public function log(
-        string $entityType,
-        int $entityId,
-        string $type,
-        string $description
-    ): void {
-
+    public function log(array $data): void
+    {
         $this->repo->create([
-            'entity_type'   => $entityType,
-            'entity_id'     => $entityId,
-            'activity_type' => $type,
-            'description'   => $description,
+            'entity_type'   => $data['entity_type'],
+            'entity_id'     => $data['entity_id'],
+            'activity_type' => $data['activity_type'],
+            'description'   => $data['description'],
         ]);
+    }
+
+    public function exists(string $type, int $id, string $activityType): bool
+    {
+        return $this->repo->exists($type, $id, $activityType);
     }
 
     public function getTimeline(string $type, int $id): array
