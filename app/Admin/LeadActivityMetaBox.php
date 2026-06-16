@@ -3,9 +3,19 @@
 namespace AgencyCRM\Admin;
 
 use AgencyCRM\Bootstrap;
+use AgencyCRM\Services\ActivityService;
+use AgencyCRM\Repositories\ActivityRepository;
 
 class LeadActivityMetaBox
 {
+        private ActivityService $activity;
+
+        public function __construct()
+        {
+            $this->activity = new ActivityService(
+                new ActivityRepository()
+            );
+        }
     public function register(): void
     {
         add_action('add_meta_boxes', [$this, 'add']);
@@ -25,7 +35,7 @@ class LeadActivityMetaBox
 
     public function render($post): void
 {
-    $activities = Bootstrap::$activity->getTimeline('lead', $post->ID);
+    $activities = $this->activity->getTimeline('lead', $post->ID);
 
     echo '<div style="padding:15px;">';
 
