@@ -9,20 +9,26 @@ use AgencyCRM\Admin\LeadAdminColumns;
 use AgencyCRM\Repositories\ActivityRepository;
 use AgencyCRM\Services\ActivityService;
 use AgencyCRM\Admin\LeadActivityMetaBox;
+/**
+ * Hooks
+ */
+use AgencyCRM\Hooks\LeadHooks;
+
 
 class Bootstrap
 {
-    public static ActivityService $activity;
+    public ActivityService $activity;
 
     public function run(): void
     {
-        self::$activity = new ActivityService(
-            new ActivityRepository()
+        $this->activity = new ActivityService(
+            new \AgencyCRM\Repositories\ActivityRepository()
         );
 
         (new LeadPostType())->register();
         (new LeadMetaBox())->register();
         (new LeadAdminColumns())->register();
         (new LeadActivityMetaBox())->register();
+        (new LeadHooks())->register();
     }
 }
