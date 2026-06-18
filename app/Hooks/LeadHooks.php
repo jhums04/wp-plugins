@@ -6,6 +6,7 @@ use AgencyCRM\Services\ActivityService;
 use AgencyCRM\Repositories\ActivityRepository;
 use AgencyCRM\Constants\ActivityTypes;
 
+
 class LeadHooks
 {
     public function register(): void
