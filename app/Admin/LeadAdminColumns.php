@@ -77,16 +77,24 @@ class LeadAdminColumns
                 break;
 
             case 'budget':
-                echo esc_html(
-                    number_format(
-                        (float) get_post_meta(
-                            $postId,
-                            'budget',
-                            true
-                        ),
-                        2
-                    )
+
+                $budget = get_post_meta(
+                    $postId,
+                    'budget',
+                    true
                 );
+
+                $labels = [
+                    '20k-50k'   => '₱20,000 - ₱50,000',
+                    '50k-100k'  => '₱50,000 - ₱100,000',
+                    '100k-250k' => '₱100,000 - ₱250,000',
+                    '250k+'     => '₱250,000+',
+                ];
+
+                echo esc_html(
+                    $labels[$budget] ?? $budget
+                );
+
                 break;
 
             case 'assigned_user':

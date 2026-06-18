@@ -110,8 +110,33 @@ class LeadMetaBox
             <tr>
                 <th>Budget</th>
                 <td>
-                    <input type="number" name="budget"
-                        value="<?php echo esc_attr($budget); ?>">
+                    <select name="budget">
+
+                        <option value="">
+                            Select Budget
+                        </option>
+
+                        <option value="20k-50k"
+                            <?php selected($budget, '20k-50k'); ?>>
+                            ₱20,000 - ₱50,000
+                        </option>
+
+                        <option value="50k-100k"
+                            <?php selected($budget, '50k-100k'); ?>>
+                            ₱50,000 - ₱100,000
+                        </option>
+
+                        <option value="100k-250k"
+                            <?php selected($budget, '100k-250k'); ?>>
+                            ₱100,000 - ₱250,000
+                        </option>
+
+                        <option value="250k+"
+                            <?php selected($budget, '250k+'); ?>>
+                            ₱250,000+
+                        </option>
+
+                    </select>
                 </td>
             </tr>
 

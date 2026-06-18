@@ -48,6 +48,11 @@ require_once __DIR__ . '/app/Hooks/LeadHooks.php';
  */
 require_once __DIR__ . '/app/Constants/ActivityTypes.php';
 
+/**
+ * forms
+ */
+require_once __DIR__ . '/app/Forms/ConsultationForm.php';
+
 use AgencyCRM\Bootstrap;
 use AgencyCRM\Database\Migrations;
 
