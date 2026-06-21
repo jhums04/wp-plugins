@@ -42,7 +42,7 @@ class ConsultationForm
         update_post_meta($leadId, 'stage', 'new');
 
         // --- N8N WEBHOOK INTEGRATION ---
-        $webhook_url = 'http://localhost:5678/webhook-test/a5ed5266-1576-48f2-ae5c-c16c6f37f756';
+        $webhook_url = 'http://localhost:5678/webhook/a5ed5266-1576-48f2-ae5c-c16c6f37f756';
 
         $body = [
             'lead_id' => $leadId,

@@ -6,10 +6,21 @@ class LeadRepository
 {
     public function create(array $data): int
     {
+        $postDate = !empty($data['post_date'])
+            ? $data['post_date'] . ' 00:00:00'
+            : current_time('mysql');
+
+        // ✅ condition: if post_date exists, force stage = "new"
+        if (!empty($data['post_date'])) {
+            $data['stage'] = 'new';
+        }
+
         $leadId = wp_insert_post([
-            'post_type'   => 'lead',
-            'post_title'  => $data['company_name'],
-            'post_status' => 'publish',
+            'post_type'      => 'lead',
+            'post_title'     => $data['company_name'],
+            'post_status'    => 'publish',
+            'post_date'      => $postDate,
+            'post_date_gmt'  => get_gmt_from_date($postDate),
         ]);
 
         if (is_wp_error($leadId)) {
@@ -67,6 +78,7 @@ class LeadRepository
             'stage',
             'budget',
             'assigned_user',
+            'message'
         ];
 
         foreach ($fields as $field) {
@@ -119,7 +131,12 @@ class LeadRepository
                     $post->ID,
                     'message',
                     true
-                )
+                ),
+                'budget' => get_post_meta(
+                    $post->ID,
+                    'budget',
+                    true
+                ),
             ];
         }
 

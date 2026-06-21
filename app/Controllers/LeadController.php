@@ -34,9 +34,20 @@ class LeadController
                 'permission_callback' => '__return_true',
             ]
         );
+
+        register_rest_route(
+            'agency-crm/v1',
+            '/leads',
+            [
+                'methods' => 'POST',
+                'callback' => [$this, 'createLead'],
+                'permission_callback' => '__return_true',
+            ]
+        );
     }
 
-    public function getNewLeads(WP_REST_Request $request) : WP_REST_Response {
+    public function getNewLeads(WP_REST_Request $request): WP_REST_Response
+    {
 
         $leads = $this->repository->findByStage('new');
 
@@ -44,5 +55,17 @@ class LeadController
             $leads,
             200
         );
+    }
+
+    public function createLead(WP_REST_Request $request): WP_REST_Response
+    {
+        $data = $request->get_json_params();
+
+        $leadId = $this->repository->create($data);
+
+        return new WP_REST_Response([
+            'message' => 'Lead Created successfully',
+            'lead_id' => $leadId
+        ], 200);
     }
 }
