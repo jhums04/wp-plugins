@@ -23,7 +23,7 @@ class ConsultationForm
         $leadId = wp_insert_post([
             'post_type'   => 'lead',
             'post_status' => 'publish',
-            'post_title'  => $name,
+            'post_title'  => $company,
         ]);
 
         if (!$leadId || is_wp_error($leadId)) {

@@ -77,4 +77,52 @@ class LeadRepository
             );
         }
     }
+
+    public function findByStage(string $stage): array
+    {
+        $query = new \WP_Query([
+            'post_type'      => 'lead',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'meta_query'     => [
+                [
+                    'key'   => 'stage',
+                    'value' => $stage,
+                ]
+            ]
+        ]);
+
+        $results = [];
+
+        foreach ($query->posts as $post) {
+
+            $results[] = [
+                'id'           => $post->ID,
+                'company_name' => $post->post_title,
+                'contact_name' => get_post_meta(
+                    $post->ID,
+                    'contact_name',
+                    true
+                ),
+                'email' => get_post_meta(
+                    $post->ID,
+                    'email',
+                    true
+                ),
+                'phone' => get_post_meta(
+                    $post->ID,
+                    'phone',
+                    true
+                ),
+                'post_date' => get_the_date('Y-m-d', $post->ID),
+                'message' => get_post_meta(
+                    $post->ID,
+                    'message',
+                    true
+                )
+            ];
+        }
+
+        return $results;
+    }
 }

@@ -31,6 +31,7 @@ require_once __DIR__ . '/app/Admin/LeadActivityMetaBox.php';
  * CRM Services
  */
 require_once __DIR__ . '/app/Repositories/ActivityRepository.php';
+require_once __DIR__ . '/app/Repositories/LeadRepository.php';
 require_once __DIR__ . '/app/Services/ActivityService.php';
 
 /**
@@ -52,6 +53,12 @@ require_once __DIR__ . '/app/Constants/ActivityTypes.php';
  * forms
  */
 require_once __DIR__ . '/app/Forms/ConsultationForm.php';
+
+
+/**
+ * Controllers
+ */
+require_once __DIR__ . '/app/Controllers/LeadController.php';
 
 use AgencyCRM\Bootstrap;
 use AgencyCRM\Database\Migrations;

@@ -17,6 +17,9 @@ use AgencyCRM\Hooks\LeadHooks;
 use AgencyCRM\Forms\ConsultationForm;
 
 
+use AgencyCRM\Controllers\LeadController;
+
+
 class Bootstrap
 {
     public ActivityService $activity;
@@ -33,5 +36,6 @@ class Bootstrap
         (new LeadActivityMetaBox())->register();
         (new LeadHooks())->register();
         (new ConsultationForm())->register();
+        (new LeadController())->register();
     }
 }
