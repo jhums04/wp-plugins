@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Agency CRM
  * Description: CRM for digital agencies.
@@ -19,12 +20,15 @@ require_once __DIR__ . '/app/Bootstrap.php';
  * Post Types
  */
 require_once __DIR__ . '/app/PostTypes/LeadPostType.php';
+require_once __DIR__ . '/app/PostTypes/ProposalPostType.php';
 
 /**
  * Admin
  */
 require_once __DIR__ . '/app/Admin/LeadMetaBox.php';
+require_once __DIR__ . '/app/Admin/ProposalMetaBox.php';
 require_once __DIR__ . '/app/Admin/LeadAdminColumns.php';
+require_once __DIR__ . '/app/Admin/ProposalAdminColumns.php';
 require_once __DIR__ . '/app/Admin/LeadActivityMetaBox.php';
 
 /**
@@ -32,6 +36,7 @@ require_once __DIR__ . '/app/Admin/LeadActivityMetaBox.php';
  */
 require_once __DIR__ . '/app/Repositories/ActivityRepository.php';
 require_once __DIR__ . '/app/Repositories/LeadRepository.php';
+require_once __DIR__ . '/app/Repositories/ProposalRepository.php';
 require_once __DIR__ . '/app/Services/ActivityService.php';
 
 /**
@@ -59,6 +64,7 @@ require_once __DIR__ . '/app/Forms/ConsultationForm.php';
  * Controllers
  */
 require_once __DIR__ . '/app/Controllers/LeadController.php';
+require_once __DIR__ . '/app/Controllers/ProposalController.php';
 
 use AgencyCRM\Bootstrap;
 use AgencyCRM\Database\Migrations;

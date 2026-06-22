@@ -44,6 +44,16 @@ class LeadController
                 'permission_callback' => '__return_true',
             ]
         );
+
+        register_rest_route(
+            'agency-crm/v1',
+            '/leads/discovery-ready',
+            [
+                'methods' => 'GET',
+                'callback' => [$this, 'getLeadsWithDiscoveryNotes'],
+                'permission_callback' => '__return_true',
+            ]
+        );
     }
 
     public function getNewLeads(WP_REST_Request $request): WP_REST_Response
@@ -67,5 +77,11 @@ class LeadController
             'message' => 'Lead Created successfully',
             'lead_id' => $leadId
         ], 200);
+    }
+
+    public function getLeadsWithDiscoveryNotes(WP_REST_Request $request): WP_REST_Response
+    {
+        $leadsWithDiscovery = $this->repository->findLeadsWithCallNotes();
+        return new WP_REST_Response($leadsWithDiscovery, 200);
     }
 }

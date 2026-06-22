@@ -45,10 +45,12 @@ class LeadMetaBox
         $source      = get_post_meta($post->ID, 'source', true);
         $stage       = get_post_meta($post->ID, 'stage', true);
         $budget      = get_post_meta($post->ID, 'budget', true);
+        $service     = get_post_meta($post->ID, 'service', true);
         $assignedUser = get_post_meta($post->ID, 'assigned_user', true);
+        $callNotes = get_post_meta($post->ID, 'call_notes', true);
 
         $users = get_users();
-        ?>
+?>
 
         <table class="form-table">
 
@@ -106,6 +108,17 @@ class LeadMetaBox
                     </select>
                 </td>
             </tr>
+            <tr>
+                <th>Service</th>
+                <td>
+                    <select name="service">
+                        <option value="new" <?php selected($service, 'website'); ?>>Website Development</option>
+                        <option value="qualified" <?php selected($service, 'seo'); ?>>SEO</option>
+                        <option value="discovery" <?php selected($service, 'google_ads'); ?>>Google Ads</option>
+                        <option value="proposal_sent" <?php selected($service, 'automation'); ?>>CRM and Automation</option>
+                    </select>
+                </td>
+            </tr>
 
             <tr>
                 <th>Budget</th>
@@ -157,9 +170,19 @@ class LeadMetaBox
                 </td>
             </tr>
 
+            <tr>
+                <th>Call Notes</th>
+                <td>
+                    <textarea
+                        name="call_notes"
+                        rows="8"
+                        style="width:100%;"><?php echo esc_textarea($callNotes); ?></textarea>
+                </td>
+            </tr>
+
         </table>
 
-        <?php
+<?php
     }
 
     public function saveMetaBox(int $postId): void
@@ -193,6 +216,7 @@ class LeadMetaBox
             'stage',
             'budget',
             'assigned_user',
+            'call_notes',
         ];
 
         $generalChanged = false;
@@ -209,12 +233,15 @@ class LeadMetaBox
             $old = get_post_meta($postId, $field, true);
             $raw = $_POST[$field] ?? '';
 
-            if ($field === 'assigned_user') {
-                $new = (int) $raw;
-            } elseif ($field === 'budget') {
-                $new = (float) $raw;
-            } else {
-                $new = sanitize_text_field($raw);
+            switch ($field) {
+
+                case 'assigned_user':
+                    $new = (int) $raw;
+                    break;
+
+                default:
+                    $new = sanitize_text_field($raw);
+                    break;
             }
 
             if ($old !== $new) {

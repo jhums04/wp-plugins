@@ -90,6 +90,113 @@ class LeadRepository
         }
     }
 
+    public function findLeadsWithCallNotes(): array
+    {
+        // Get all lead IDs that already have proposals
+        $proposalQuery = new \WP_Query([
+            'post_type'      => 'proposal',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+        ]);
+
+        $leadIdsWithProposal = [];
+
+        foreach ($proposalQuery->posts as $proposalId) {
+            $leadId = get_post_meta(
+                $proposalId,
+                'lead_id',
+                true
+            );
+
+            if (!empty($leadId)) {
+                $leadIdsWithProposal[] = (int) $leadId;
+            }
+        }
+
+        $query = new \WP_Query([
+            'post_type'      => 'lead',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+
+            // Exclude leads that already have proposals
+            'post__not_in'   => $leadIdsWithProposal,
+
+            'meta_query'     => [
+                'relation' => 'AND',
+
+                [
+                    'key'   => 'stage',
+                    'value' => 'discovery',
+                ],
+
+                [
+                    'key'     => 'call_notes',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+            ],
+        ]);
+
+        $results = [];
+
+        foreach ($query->posts as $post) {
+
+            $results[] = [
+                'id'           => $post->ID,
+                'company_name' => $post->post_title,
+
+                'contact_name' => get_post_meta(
+                    $post->ID,
+                    'contact_name',
+                    true
+                ),
+
+                'email' => get_post_meta(
+                    $post->ID,
+                    'email',
+                    true
+                ),
+
+                'phone' => get_post_meta(
+                    $post->ID,
+                    'phone',
+                    true
+                ),
+
+                'post_date' => get_the_date(
+                    'Y-m-d',
+                    $post->ID
+                ),
+
+                'message' => get_post_meta(
+                    $post->ID,
+                    'message',
+                    true
+                ),
+
+                'budget' => get_post_meta(
+                    $post->ID,
+                    'budget',
+                    true
+                ),
+                'service' => get_post_meta(
+                    $post->ID,
+                    'service',
+                    true
+                ),
+
+                'call_notes' => get_post_meta(
+                    $post->ID,
+                    'call_notes',
+                    true
+                ),
+            ];
+        }
+
+        return $results;
+    }
+
     public function findByStage(string $stage): array
     {
         $query = new \WP_Query([
